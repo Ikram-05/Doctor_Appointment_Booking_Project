@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,11 +44,7 @@
     <div class="form-container">
         <h2>Register</h2>
         <form action="RegisterServlet" method="POST">
-            <label for="role">Select Role:</label>
-            <select name="role" required>
-                <option value="user">Patient</option>
-                <option value="doctor">Doctor (Admin Only)</option>
-            </select>
+            
 
             <label for="name">Name:</label>
             <input type="text" name="name" required>

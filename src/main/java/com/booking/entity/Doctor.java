@@ -24,6 +24,11 @@ public class Doctor {
 
     @Column(nullable = false)
     private String availability; // Available or Not Available
+    
+    public Doctor() {
+        // Set default value in the constructor
+        this.availability = "Available"; // Default to "Available"
+    }
 
     // Getters and Setters
     public int getDoctorid() {

@@ -1,10 +1,9 @@
 package com.booking.dao;
 
-
 import java.util.List;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import com.booking.util.JPAUtil;
 import com.booking.entity.Admin;
 
@@ -23,7 +22,7 @@ public class AdminDAO {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            throw e; // Re-throw the exception after rollback
+            throw e;
         } finally {
             em.close();
         }
@@ -80,13 +79,15 @@ public class AdminDAO {
         }
     }
 
-    // Find Admin by email (or any unique field)
+    // Find Admin by Email (with Exception Handling)
     public Admin findAdminByEmail(String email) {
         EntityManager em = JPAUtil.getEntityManager();
         try {
             return em.createQuery("SELECT a FROM Admin a WHERE a.email = :email", Admin.class)
                      .setParameter("email", email)
                      .getSingleResult();
+        } catch (NoResultException e) {
+            return null;  // Return null if no admin is found
         } finally {
             em.close();
         }

@@ -6,6 +6,7 @@ import com.booking.util.JPAUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import java.util.List;
@@ -111,49 +112,37 @@ public class DoctorDAO {
             Query query = entityManager.createQuery(hql);
             query.setParameter("email", email);
             query.setParameter("password", password);
-
             return (Doctor) query.getSingleResult(); // Returns the doctor object or throws NoResultException if not found
+        }  catch (NoResultException e) {
+            return null;  // No doctor found
         } catch (Exception e) {
             e.printStackTrace();
-            return null; // Handle exception properly in production code
+            throw new RuntimeException("Error finding doctor by email and password");
         } finally {
             entityManager.close();
         }
+
     }
     
     public List<Doctor> findAvailableDoctors() {
-        List<Doctor> doctors = null;
         EntityManager entityManager = JPAUtil.getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
         try {
-            transaction.begin();
-            doctors = entityManager.createQuery("SELECT d FROM Doctor d WHERE d.availability = 'Available'", Doctor.class)
+            return entityManager.createQuery("SELECT d FROM Doctor d WHERE d.availability = 'Available'", Doctor.class)
                     .getResultList();
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            throw e;
-        }
-        return doctors;
-    }
-    
-    public Doctor findDoctorById(int doctorId) {
-        Doctor doctor = null;
-        EntityManager entityManager = JPAUtil.getEntityManager();
-        EntityTransaction transaction = entityManager.getTransaction();
-        try {
-            transaction.begin();
-            doctor = entityManager.find(Doctor.class, doctorId);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            e.printStackTrace();
-            throw new RuntimeException("Failed to find doctor by ID.");
         } finally {
             entityManager.close();
         }
-        return doctor;
     }
+
+    public Doctor findDoctorById(int doctorId) {
+        EntityManager entityManager = JPAUtil.getEntityManager();
+        try {
+            return entityManager.find(Doctor.class, doctorId);
+        } finally {
+            entityManager.close();
+        }
+    }
+
     
     public void updateAvailability(int doctorId, String availability) {
         EntityManager entityManager = JPAUtil.getEntityManager();
@@ -162,7 +151,7 @@ public class DoctorDAO {
             entityManager.getTransaction().begin();  // Start transaction
             Doctor doctor = entityManager.find(Doctor.class, doctorId);
             if (doctor != null) {
-                doctor.setAvailability(availability);
+                doctor.setAvailability(availability); // Set the new availability value
                 entityManager.merge(doctor); // Persist changes to the database
             }
             entityManager.getTransaction().commit();  // Commit the transaction
@@ -175,7 +164,10 @@ public class DoctorDAO {
             entityManager.close();  // Close the EntityManager
         }
     }
-    }
+
+    
+
+}
 
 
 

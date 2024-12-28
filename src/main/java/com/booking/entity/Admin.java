@@ -18,8 +18,18 @@ public class Admin {
 
     @Column(nullable = false)
     private String password;
+    
+    private String email;
 
-    // Getters and Setters
+    public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	// Getters and Setters
     public int getAdmin_id() {
         return admin_id;
     }

@@ -1,6 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page import="com.booking.entity.Doctor" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,10 +76,11 @@
 
     <div class="container">
         <h2>Welcome, Admin!</h2>
-        
+
+        <!-- Doctors Section -->
         <div class="card">
             <h3>Manage Doctors</h3>
-            <a href="addDoctor.jsp" class="btn">Add New Doctor</a>
+            <a href="doctorRegister.jsp" class="btn">Add New Doctor</a>
             <table>
                 <thead>
                     <tr>
@@ -90,6 +92,18 @@
                     </tr>
                 </thead>
                 <tbody>
+                    <%-- Debug Doctor List --%>
+                    <%
+                        java.util.List<Doctor> doctorList = (java.util.List<Doctor>) request.getAttribute("doctors");
+                        if (doctorList != null) {
+                            for (Doctor doc : doctorList) {
+                                System.out.println("Doctor: " + doc.getName() + ", Specialization: " + doc.getSpecialization());
+                            }
+                        } else {
+                            System.out.println("Doctors list is null.");
+                        }
+                    %>
+                    
                     <c:forEach var="doctor" items="${doctors}">
                         <tr>
                             <td>${doctor.name}</td>
@@ -97,8 +111,8 @@
                             <td>${doctor.email}</td>
                             <td>${doctor.availability}</td>
                             <td>
-                                <a href="editDoctor.jsp?id=${doctor.doctor_id}" class="btn">Edit</a>
-                                <a href="deleteDoctorServlet?id=${doctor.doctor_id}" class="btn">Delete</a>
+                                <a href="editDoctor.jsp?id=${doctor.doctorid}" class="btn">Edit</a>
+                                <a href="deleteDoctorServlet?id=${doctor.doctorid}" class="btn">Delete</a>
                             </td>
                         </tr>
                     </c:forEach>
@@ -106,6 +120,7 @@
             </table>
         </div>
 
+        <!-- Users Section -->
         <div class="card">
             <h3>Manage Users</h3>
             <table>
@@ -134,7 +149,37 @@
                 </tbody>
             </table>
         </div>
+
+        <!-- Appointments Section -->
+        <div class="card">
+            <h3>Manage Appointments</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient Name</th>
+                        <th>Doctor</th>
+                        <th>Appointment Date</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <c:forEach var="appointment" items="${appointments}">
+                        <tr>
+                            <td>${appointment.user.name}</td>
+                            <td>${appointment.doctor.name}</td>
+                            <td>${appointment.appointment_date}</td>
+                            <td>${appointment.status}</td>
+                            <td>
+                                <a href="editAppointment.jsp?id=${appointment.appointment_id}" class="btn">Edit</a>
+                                <a href="deleteAppointmentServlet?id=${appointment.appointment_id}" class="btn">Delete</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 </body>
 </html>
-    

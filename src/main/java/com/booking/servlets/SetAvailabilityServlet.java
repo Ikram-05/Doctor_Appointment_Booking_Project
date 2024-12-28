@@ -1,14 +1,12 @@
 package com.booking.servlets;
 
 import java.io.IOException;
-
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import com.booking.dao.DoctorDAO;
 import com.booking.entity.Doctor;
 import com.booking.util.JPAUtil;
@@ -19,6 +17,11 @@ public class SetAvailabilityServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int doctorId = Integer.parseInt(request.getParameter("doctorId"));
         String availability = request.getParameter("isAvailable"); // "Available" or "Not Available"
+
+        // Default to "Available" if no value is passed
+        if (availability == null || availability.isEmpty()) {
+            availability = "Available";
+        }
 
         EntityManager entityManager = JPAUtil.getEntityManager();
 
@@ -44,5 +47,3 @@ public class SetAvailabilityServlet extends HttpServlet {
         }
     }
 }
-
-

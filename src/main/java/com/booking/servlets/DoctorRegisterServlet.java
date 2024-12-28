@@ -41,7 +41,7 @@ public class DoctorRegisterServlet extends HttpServlet {
             em.getTransaction().begin();
             em.persist(newDoctor);  // Persist the doctor entity
             em.getTransaction().commit();
-            response.sendRedirect("doctorLogin.jsp?message=Doctor registered successfully");
+            response.sendRedirect("adminDashboard.jsp?message=Doctor registered successfully");
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
                 em.getTransaction().rollback();
